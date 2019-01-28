@@ -29,7 +29,6 @@ public class MainWindow extends JFrame implements Serializable, ActionListener,R
 	ArrayList<Fiche> ficheList = new ArrayList<Fiche>(); 
 	
 	private JPanel panel = new JPanel();
-	private FicheDialog dialogWindow;
 	
 	
 	WordsTableView ficheTable = new WordsTableView(ficheList);
@@ -50,6 +49,8 @@ public class MainWindow extends JFrame implements Serializable, ActionListener,R
 	public static void main(String args[]) {
 		
 		MainWindow main = new MainWindow();
+		Thread thread = new Thread(main);
+		main.run();
 		
 	}
 	
@@ -67,9 +68,7 @@ public class MainWindow extends JFrame implements Serializable, ActionListener,R
 		panel.add(addWordB);
 		searchB.addActionListener(this);
 		addWordB.addActionListener(this);
-		dialogWindow = new FicheDialog(this);
-		Thread thread = new Thread(dialogWindow);
-		thread.start();
+		
 		
 		ficheTable.refresh();
 		
@@ -246,8 +245,18 @@ public class MainWindow extends JFrame implements Serializable, ActionListener,R
 	@Override
 	public void run() {
 for(;;) {
-	Random rand = new Random();
+	int rand = new Random().nextInt(allFicheList.size()-1);
+	FicheDialog dialogWindow = new FicheDialog(this,allFicheList.get(rand).tWord,allFicheList.get(rand).word);
+	Thread thread2 = new Thread(dialogWindow);
+	thread2.run();
 	
+	try {
+		Thread.sleep(10000);
+		dialogWindow.dispose();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	
 	
 	
